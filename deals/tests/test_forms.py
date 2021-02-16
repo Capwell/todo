@@ -64,12 +64,17 @@ class TaskCreateFormTests(TestCase):
             follow=True
         )
         # Проверяем, сработал ли редирект
-        self.assertRedirects(response, '/added/')
+        self.assertRedirects(response, reverse('deals:task_added'))
         # Проверяем, увеличилось ли число постов
         self.assertEqual(Task.objects.count(), tasks_count+1)
         # Проверяем, что создалась запись с нашим слагом
-        self.assertTrue(Task.objects.filter(slug='testovyij-zagolovok').exists())
-
+        self.assertTrue(
+            Task.objects.filter(
+                slug='testovyij-zagolovok',
+                text='Тестовый текст',
+                image='tasks/small.gif'
+                ).exists()
+        )
 
     def test_cant_create_existing_slug(self):
         # Подсчитаем количество записей в Task

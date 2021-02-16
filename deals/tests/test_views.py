@@ -5,6 +5,8 @@ from django import forms
 
 from deals.models import Task
 
+User = get_user_model()
+
 
 class TaskPagesTests(TestCase):
     @classmethod
@@ -20,7 +22,7 @@ class TaskPagesTests(TestCase):
         # Создаём неавторизованный клиент
         self.guest_client = Client()
         # Создаём авторизованный клиент
-        self.user = get_user_model().objects.create_user(username='StasBasov')
+        self.user = User.objects.create_user(username='StasBasov')
         self.authorized_client = Client()
         self.authorized_client.force_login(self.user)
 
@@ -61,7 +63,7 @@ class TaskPagesTests(TestCase):
         # соответствуют ожиданиям
         for value, expected in form_fields.items():
             with self.subTest(value=value):
-                form_field = response.context.get('form').fields.get(value)
+                form_field = response.context['form'].fields[value]
                 # Проверяет, что поле формы является экземпляром
                 # указанного класса
                 self.assertIsInstance(form_field, expected)
@@ -79,9 +81,9 @@ class TaskPagesTests(TestCase):
         response = self.authorized_client.get(reverse('deals:task_list'))
         # Взяли первый элемент из списка и проверили, что его содержание
         # совпадает с ожидаемым
-        task_title_0 = response.context.get('object_list')[0].title
-        task_text_0 = response.context.get('object_list')[0].text
-        task_slug_0 = response.context.get('object_list')[0].slug
+        task_title_0 = response.context['object_list'][0].title
+        task_text_0 = response.context['object_list'][0].text
+        task_slug_0 = response.context['object_list'][0].slug
         self.assertEqual(task_title_0, 'Заголовок')
         self.assertEqual(task_text_0, 'Текст')
         self.assertEqual(task_slug_0, 'test-slug')
@@ -93,12 +95,12 @@ class TaskPagesTests(TestCase):
         response = self.authorized_client.get(
             reverse('deals:task_detail', kwargs={'slug': 'test-slug'})
             )
-        self.assertEqual(response.context.get('task').title, 'Заголовок')
-        self.assertEqual(response.context.get('task').text, 'Текст')
-        self.assertEqual(response.context.get('task').slug, 'test-slug')
+        self.assertEqual(response.context['task'].title, 'Заголовок')
+        self.assertEqual(response.context['task'].text, 'Текст')
+        self.assertEqual(response.context['task'].slug, 'test-slug')
 
     def test_initial_value(self):
         """Предустановленнное значение формы."""
         response = self.guest_client.get(reverse('deals:home'))
-        title_inital = response.context.get('form').fields.get('title').initial
+        title_inital = response.context['form'].fields['title'].initial
         self.assertEqual(title_inital, 'Значение по-умолчанию')
