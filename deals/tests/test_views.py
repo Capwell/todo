@@ -48,7 +48,7 @@ class TaskPagesTests(TestCase):
     def test_home_page_show_correct_context(self):
         """Шаблон home сформирован с правильным контекстом."""
         response = self.guest_client.get(reverse('deals:home'))
-        # Список ожидаемых типов полей формы:
+        # Словарь ожидаемых типов полей формы:
         # указываем, объектами какого класса должны быть поля формы
         form_fields = {
             'title': forms.fields.CharField,
@@ -81,9 +81,10 @@ class TaskPagesTests(TestCase):
         response = self.authorized_client.get(reverse('deals:task_list'))
         # Взяли первый элемент из списка и проверили, что его содержание
         # совпадает с ожидаемым
-        task_title_0 = response.context['object_list'][0].title
-        task_text_0 = response.context['object_list'][0].text
-        task_slug_0 = response.context['object_list'][0].slug
+        first_object = response.context['object_list'][0]
+        task_title_0 = first_object.title
+        task_text_0 = first_object.text
+        task_slug_0 = first_object.slug
         self.assertEqual(task_title_0, 'Заголовок')
         self.assertEqual(task_text_0, 'Текст')
         self.assertEqual(task_slug_0, 'test-slug')
