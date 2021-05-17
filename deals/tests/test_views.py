@@ -72,7 +72,7 @@ class TaskPagesTests(TestCase):
         # Удостоверимся, что на страницу со списком заданий передаётся
         # ожидаемое количество объектов
         response = self.authorized_client.get(reverse('deals:task_list'))
-        self.assertEqual(len(response.context['object_list']), 1)
+        self.assertEqual(response.context['object_list'].count(), 1)
 
     # Проверяем, что словарь context страницы /task
     # в первом элементе списка object_list содержит ожидаемые значения
