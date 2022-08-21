@@ -1,4 +1,6 @@
-django==2.2.6
-pillow==7.0.0
-pytz==2019.3
-pytils==0.3
+django==3.2.15
+pillow==9.2.0
+pytz==2022.2.1
+pytils==0.4.1
+pytest==7.1.2
+pytest-django==4.5.2
