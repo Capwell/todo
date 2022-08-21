@@ -1,5 +1,5 @@
 from django.db import models
-# pip3 install pytils не забыть установить!
+
 from pytils.translit import slugify
 
 
