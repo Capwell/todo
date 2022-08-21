@@ -7,8 +7,9 @@ from .forms import TaskCreateForm
 from .models import Task
 
 
-class Home(CreateView):
+class Home(LoginRequiredMixin, CreateView):
     """Форма добавления задания."""
+    login_url = '/admin/login/'
     template_name = 'deals/home.html'
     form_class = TaskCreateForm
     success_url = reverse_lazy('deals:task_added')
