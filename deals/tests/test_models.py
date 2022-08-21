@@ -53,7 +53,7 @@ class TaskModelTest(TestCase):
         """Содержимое поля title преобразуется в slug."""
         task = TaskModelTest.task
         slug = task.slug
-        self.assertEquals(slug, 'zh'*50)
+        self.assertEqual(slug, 'zh'*50)
 
     def test_text_slug_max_length_not_exceed(self):
         """
