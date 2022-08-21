@@ -1,9 +1,8 @@
-<html>
-  <body>
-    <h1>О проекте</h1>
-    <p>
-      Проект Todo поможет вам не забыть о самом важном
-    </p>
-    <a href="{% url 'deals:home' %}">На главную</a>
-  </body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+  <h1>О проекте</h1>
+  <p>
+    Проект Todo поможет вам не забыть о самом важном
+  </p>
+  <a href="{% url 'deals:home' %}">На главную</a>
+{% endblock content %}

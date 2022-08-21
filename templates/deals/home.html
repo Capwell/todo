@@ -1,25 +1,53 @@
-<html>
-  <body>
-    <h1>Домашняя страница</h1>
-    <ul>
-      <li>
-        <a href="{% url 'static_pages:about' %}">О проекте</a>
-      </li>
-      <li>
-        <a href="{% url 'deals:task_list' %}">Список задач</a>
-      </li>
-    </ul>
-    <h2>Добавить задачу</h2>
-    <!-- enctype определяет способ кодирования данных формы
-    при их отправке на сервер.
-    Обычно устанавливать значение атрибута enctype не требуется,
-    данные вполне правильно понимаются на стороне сервера.
-    Однако если используется поле для отправки файла (input type="file"),
-    следует определить атрибут enctype как multipart/form-data. -->
-    <form action="" method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      {{ form.as_p }}
-    <input type="submit" value="Сохранить">
+{% extends "base.html" %}
+{% block content %}
+  <h1>Домашняя страница</h1>
+  <ul>
+    <li>
+      <a href="{% url 'static_pages:about' %}">О проекте</a>
+    </li>
+    <li>
+      <a href="{% url 'deals:task_list' %}">Список задач</a>
+    </li>
+  </ul>
+  <h2>Добавить задачу</h2>
+  <!-- enctype определяет способ кодирования данных формы
+  при их отправке на сервер.
+  Обычно устанавливать значение атрибута enctype не требуется,
+  данные вполне правильно понимаются на стороне сервера.
+  Однако если используется поле для отправки файла (input type="file"),
+  следует определить атрибут enctype как multipart/form-data. -->
+  <form class="form-horizontal" method="post"  enctype="multipart/form-data">
+    {% csrf_token %}
+    <fieldset>
+      <legend>{{ title }}</legend>
+      {% for field in form %}
+        {% if field.errors %}
+          <div class="control-group error">
+            <label class="control-label">{{ field.label }}</label>
+            <div class="controls">
+              {{ field }}
+              <span class="help-inline" style="color:red;">
+                {% for error in  field.errors %}{{ error }}{% endfor %}
+              </span>
+                {% if field.help_text %}
+                  <p class="help-inline"><small>{{ field.help_text }}</small></p>
+                {% endif %}
+            </div>
+          </div>
+        {% else %}
+          <div class="control-group">
+            <label class="control-label">{{ field.label }}</label>
+            <div class="controls">{{ field }}
+              {% if field.help_text %}
+                <p class="help-inline"><small>{{ field.help_text }}</small></p>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </fieldset>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" >Сохранить</button>
+    </div>
   </form>
-  </body>
-</html>
+{% endblock %}
