@@ -1,16 +1,19 @@
 import shutil
 import tempfile
 
-from deals.forms import TaskCreateForm
-from deals.models import Task
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 
+from deals.forms import TaskCreateForm
+from deals.models import Task
+
 # Создаем временную папку для медиа-файлов;
 # на момент теста медиа папка будет переопределена
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
+User = get_user_model()
 
 
 # Для сохранения media-файлов в тестах будет использоватьсяgs
@@ -39,8 +42,9 @@ class TaskCreateFormTests(TestCase):
         shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
 
     def setUp(self):
-        # Создаем неавторизованный клиент
-        self.guest_client = Client()
+        self.user = User.objects.create_user(username='StasBasov')
+        self.authorized_client = Client()
+        self.authorized_client.force_login(self.user)
 
     def test_create_task(self):
         """Валидная форма создает запись в Task."""
@@ -64,7 +68,7 @@ class TaskCreateFormTests(TestCase):
             'text': 'Тестовый текст',
             'image': uploaded,
         }
-        response = self.guest_client.post(
+        response = self.authorized_client.post(
             reverse('deals:home'),
             data=form_data,
             follow=True
@@ -91,7 +95,7 @@ class TaskCreateFormTests(TestCase):
             'slug': 'first',  # отправим в форму slug, который уже есть в БД
         }
         # Отправляем POST-запрос
-        response = self.guest_client.post(
+        response = self.authorized_client.post(
             reverse('deals:home'),
             data=form_data,
             follow=True

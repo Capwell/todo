@@ -47,7 +47,7 @@ class TaskPagesTests(TestCase):
 
     def test_home_page_show_correct_context(self):
         """Шаблон home сформирован с правильным контекстом."""
-        response = self.guest_client.get(reverse('deals:home'))
+        response = self.authorized_client.get(reverse('deals:home'))
         # Словарь ожидаемых типов полей формы:
         # указываем, объектами какого класса должны быть поля формы
         form_fields = {
@@ -103,6 +103,6 @@ class TaskPagesTests(TestCase):
 
     def test_initial_value(self):
         """Предустановленнное значение формы."""
-        response = self.guest_client.get(reverse('deals:home'))
+        response = self.authorized_client.get(reverse('deals:home'))
         title_inital = response.context['form'].fields['title'].initial
         self.assertEqual(title_inital, 'Значение по-умолчанию')
