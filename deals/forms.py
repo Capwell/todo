@@ -19,7 +19,7 @@ class TaskCreateForm(forms.ModelForm):
         cleaned_data = super().clean()
         slug = cleaned_data('slug')
         if not slug:
-            title = cleaned_data('slug')
+            title = cleaned_data['title']
             slug = slugify(title)[:100]
         if Task.objects.filter(slug=slug).exists():
             raise ValidationError(f'Адрес "{slug}" уже существует, '
