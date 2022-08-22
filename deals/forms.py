@@ -17,7 +17,7 @@ class TaskCreateForm(forms.ModelForm):
     def clean_slug(self):
         """Обрабатывает случай, если slug не уникален."""
         cleaned_data = super().clean()
-        slug = cleaned_data('slug')
+        slug = cleaned_data['slug']
         if not slug:
             title = cleaned_data['title']
             slug = slugify(title)[:100]
